@@ -1,0 +1,346 @@
+.scene {
+  --object-top: color-mix(in srgb, var(--card) 92%, var(--diagram-ink));
+  --object-front: color-mix(in srgb, var(--card) 78%, var(--diagram-ink));
+  --object-side: color-mix(in srgb, var(--card) 54%, var(--diagram-ink));
+  --object-edge: color-mix(in srgb, var(--diagram-ink) 34%, var(--card));
+  --glass: color-mix(in srgb, var(--chart-solar) 60%, var(--card));
+  position: relative;
+  isolation: isolate;
+  container-type: inline-size;
+}
+
+.connections {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.track {
+  opacity: 0.62;
+  stroke-linecap: round;
+}
+
+.scene .moving {
+  animation: current 4s linear infinite;
+  stroke-linecap: round;
+}
+
+.node,
+.inverter {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateX(-50%);
+  color: var(--text);
+  text-align: center;
+  text-decoration: none;
+  min-width: 0;
+  width: 126px;
+  padding: 0;
+  gap: 0;
+  border: none;
+  border-radius: 14px;
+  transition: color 180ms ease;
+}
+
+.node:hover,
+.inverter:hover {
+  color: var(--green);
+}
+
+.node:focus-visible,
+.inverter:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+}
+
+.illustration {
+  display: block;
+  width: 106px;
+  height: 66px;
+  margin-bottom: 2px;
+}
+
+.equipment {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transition: transform 220ms ease;
+}
+
+.node:hover .equipment,
+.inverter:hover .equipment {
+  transform: translateY(-3px);
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 2px 0 4px;
+  color: var(--muted);
+  font-size: 8.5px;
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.node strong {
+  font-size: 25px;
+  line-height: 1.08;
+  letter-spacing: -0.8px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.node :global(.reading-unit) {
+  font-size: 0.45em;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+
+.node small,
+.inverter small {
+  max-width: 126px;
+  margin-top: 4px;
+  font-size: 9px;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.flow-solar {
+  left: 18%;
+  top: 0;
+}
+
+.flow-home {
+  left: 82%;
+  top: 0;
+}
+
+.flow-battery {
+  left: 32%;
+  bottom: 0;
+}
+
+.flow-grid {
+  left: 68%;
+  bottom: 0;
+}
+
+.inverter {
+  left: 50%;
+  top: 0;
+}
+
+.inverter .illustration {
+  width: 112px;
+  height: 78px;
+}
+
+.inverter small {
+  margin-top: 1px;
+}
+
+.shadow {
+  fill: var(--diagram-ink);
+  opacity: 0.1;
+}
+
+.platform {
+  fill: var(--object-top);
+  stroke: var(--object-edge);
+}
+
+.platformEdge {
+  fill: var(--object-front);
+  stroke: var(--object-edge);
+}
+
+.platformSeam {
+  stroke: var(--object-edge);
+}
+
+.stand {
+  fill: var(--object-side);
+  stroke: var(--diagram-ink);
+  stroke-width: 1.5;
+}
+
+.panelFrame,
+.roofSide {
+  fill: var(--object-side);
+  stroke: var(--object-edge);
+}
+
+.panelSide,
+.roofNear {
+  fill: color-mix(in srgb, var(--chart-solar) 44%, var(--text));
+  stroke: var(--object-edge);
+}
+
+.solarGlass {
+  fill: var(--glass);
+  stroke: color-mix(in srgb, var(--chart-solar) 70%, var(--card));
+}
+
+.panelCells {
+  stroke: color-mix(in srgb, var(--card) 64%, var(--chart-solar));
+  opacity: 0.8;
+}
+
+.highlight {
+  stroke: var(--card);
+  opacity: 0.65;
+}
+
+.sun {
+  fill: #eab966;
+  stroke: #dca649;
+}
+
+.sunRays {
+  stroke: #c79e51;
+}
+
+.homeFront,
+.caseFront {
+  fill: var(--object-front);
+  stroke: var(--object-edge);
+}
+
+.homeSide,
+.caseSide,
+.chimney {
+  fill: var(--object-side);
+  stroke: var(--object-edge);
+}
+
+.roofEdge {
+  stroke: var(--object-edge);
+}
+
+.window,
+.windowSide {
+  fill: color-mix(in srgb, var(--chart-load) 54%, var(--card));
+  stroke: color-mix(in srgb, var(--chart-load) 35%, var(--card));
+}
+
+.windowSide {
+  opacity: 0.7;
+}
+
+.caseTop {
+  fill: var(--object-top);
+  stroke: var(--object-edge);
+}
+
+.display,
+.batteryWindow {
+  fill: color-mix(in srgb, var(--chart-solar) 30%, var(--text));
+  stroke: var(--object-edge);
+}
+
+.waveform {
+  stroke: color-mix(in srgb, var(--chart-battery) 60%, white);
+  stroke-width: 1.5;
+}
+
+.caseVent {
+  stroke: var(--diagram-ink);
+  opacity: 0.6;
+}
+
+.indicator,
+.batteryFill {
+  fill: var(--chart-battery);
+}
+
+.batteryFill {
+  transition: clip-path 600ms ease-out;
+}
+
+.batteryDividers {
+  stroke: var(--object-front);
+  stroke-width: 1.5;
+}
+
+.pylon {
+  stroke: var(--diagram-ink);
+  stroke-width: 2;
+}
+
+.crossarm {
+  fill: var(--object-side);
+  stroke: var(--diagram-ink);
+  stroke-width: 1.5;
+}
+
+.insulator {
+  stroke: var(--chart-grid);
+  stroke-width: 2.5;
+}
+
+.powerWire {
+  stroke: var(--diagram-ink);
+  opacity: 0.6;
+}
+
+@container (max-width: 450px) {
+  .node,
+  .inverter {
+    width: 96px;
+  }
+
+  .illustration {
+    width: 87px;
+    height: 65px;
+  }
+
+  .inverter .illustration {
+    width: 94px;
+    height: 75px;
+  }
+
+  .node strong {
+    font-size: 22px;
+  }
+
+  .node small,
+  .inverter small {
+    font-size: 8px;
+    max-width: 93px;
+  }
+
+  .label {
+    font-size: 7.5px;
+    letter-spacing: 0.65px;
+  }
+}
+
+@keyframes current {
+  to {
+    stroke-dashoffset: -32;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene .moving {
+    animation: none;
+  }
+
+  .equipment,
+  .batteryFill {
+    transition: none;
+  }
+
+  .node:hover .equipment,
+  .inverter:hover .equipment {
+    transform: none;
+  }
+}

@@ -1,0 +1,87 @@
+.root {
+  position: relative;
+  min-width: 0;
+}
+.panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 60;
+  width: 250px;
+  max-width: calc(100vw - 40px);
+  max-height: min(420px, 65dvh);
+  overflow: auto;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--text);
+  box-shadow: 0 14px 40px #152e2429;
+}
+.root[data-placement="above"] .panel {
+  top: auto;
+  bottom: calc(100% + 8px);
+}
+.root[data-placement="right"] .panel {
+  left: auto;
+  right: 0;
+}
+.panel > :global(a),
+.panel > :global(button) {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  border: 0;
+  border-radius: 9px;
+  padding: 10px;
+  min-height: 40px;
+  background: transparent;
+  color: var(--text);
+  font-size: 12px;
+  transition: background 160ms ease;
+}
+.panel > :global(a:hover),
+.panel > :global(button:hover) {
+  background: var(--green-soft);
+}
+.panel > :global(a[aria-current]) {
+  color: var(--green);
+  background: var(--green-soft);
+}
+.panel :global(svg) {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--green);
+}
+.panel :global(span) {
+  min-width: 0;
+}
+.panel :global(strong),
+.panel :global(small) {
+  display: block;
+}
+.panel :global(strong) {
+  font-weight: 550;
+}
+.panel :global(small) {
+  color: var(--muted);
+  font-size: 10px;
+  margin-top: 2px;
+}
+.panel :global(hr) {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 6px 4px;
+}
+.panel :global(button:disabled) {
+  opacity: 0.5;
+  cursor: wait;
+}
+@media (max-width: 1000px) and (min-width: 601px) {
+  .root[data-placement="above"] .panel {
+    left: 0;
+  }
+}

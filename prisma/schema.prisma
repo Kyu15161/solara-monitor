@@ -1,0 +1,227 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+}
+model User {
+  id String @id @default(cuid())
+  email String @unique
+  name String
+  passwordHash String?
+  role String @default("OWNER")
+  isDemo Boolean @default(false)
+  createdAt DateTime @default(now())
+  sessions Session[]
+  integrations SolarIntegration[]
+  notifications Notification[]
+  preference UserPreference?
+  audits AuditLog[]
+  resetTokens ResetToken[]
+}
+model Session {
+  id String @id
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  @@index([userId])
+}
+model ResetToken {
+  id String @id
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+}
+model UserPreference {
+  userId String @id
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  timezone String @default("Asia/Baghdad")
+  theme String @default("light")
+  temperatureUnit String @default("C")
+  currency String @default("IQD")
+  importTariff Float?
+  exportTariff Float?
+  safeMode Boolean @default(true)
+  widgets Json @default("[\"metrics\",\"flow\",\"health\",\"chart\",\"alerts\"]")
+  favorites Json @default("[]")
+}
+model SolarIntegration {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mode String
+  label String
+  encryptedCredentials String?
+  connected Boolean @default(true)
+  scenario String @default("sunny")
+  lastSync DateTime?
+  lastAttempt DateTime?
+  nextSync DateTime @default(now())
+  leaseUntil DateTime?
+  failureCount Int @default(0)
+  lastError String?
+  plants Plant[]
+  jobs SyncJob[]
+  createdAt DateTime @default(now())
+  @@index([connected, nextSync])
+}
+model Plant {
+  id String @id @default(cuid())
+  integrationId String
+  integration SolarIntegration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+  externalId String
+  name String
+  timezone String @default("Asia/Baghdad")
+  collectors Collector[]
+  @@unique([integrationId, externalId])
+}
+model Collector {
+  id String @id @default(cuid())
+  plantId String
+  plant Plant @relation(fields: [plantId], references: [id], onDelete: Cascade)
+  pn String
+  devices Device[]
+  @@unique([plantId, pn])
+}
+model Device {
+  id String @id @default(cuid())
+  collectorId String
+  collector Collector @relation(fields: [collectorId], references: [id], onDelete: Cascade)
+  sn String
+  devcode Int
+  devaddr Int
+  alias String
+  timezone String @default("Asia/Baghdad")
+  model String?
+  firmware String?
+  capacityW Float?
+  batteryWh Float?
+  mockState Json @default("{\"mode\":\"self-use\",\"chargeCurrent\":40,\"gridCharge\":false}")
+  lastSeen DateTime?
+  energyFlow Json?
+  energyFlowAt DateTime?
+  historyStatus String @default("NOT_REQUESTED")
+  readings DeviceReading[]
+  aggregates EnergyAggregate[]
+  alerts Alert[]
+  controls ControlField[]
+  actions ControlAction[]
+  @@unique([collectorId, sn, devcode, devaddr])
+}
+model DeviceReading {
+  id String @id @default(cuid())
+  deviceId String
+  device Device @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  deviceTimestamp DateTime
+  receivedAt DateTime @default(now())
+  processedAt DateTime @default(now())
+  pvPowerW Float?
+  loadPowerW Float?
+  batteryPowerW Float?
+  batterySoc Float?
+  gridPowerW Float?
+  gridVoltage Float?
+  gridFrequency Float?
+  temperatureC Float?
+  operatingMode String?
+  suspect Boolean @default(false)
+  fields Json
+  @@unique([deviceId, deviceTimestamp])
+}
+model EnergyAggregate {
+  id String @id @default(cuid())
+  deviceId String
+  device Device @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  period String
+  timezone String @default("Asia/Baghdad")
+  timestamp DateTime
+  solarWh Float?
+  loadWh Float?
+  importWh Float?
+  exportWh Float?
+  chargeWh Float?
+  dischargeWh Float?
+  peakSolarW Float?
+  peakLoadW Float?
+  coveredSeconds Float
+  sampleCount Int
+  @@unique([deviceId, period, timezone, timestamp])
+}
+model Alert {
+  id String @id @default(cuid())
+  deviceId String
+  device Device @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  key String
+  title String
+  description String
+  severity String
+  source String @default("DEVICE")
+  firstSeen DateTime @default(now())
+  lastSeen DateTime @default(now())
+  resolvedAt DateTime?
+  acknowledgedAt DateTime?
+  acknowledgedBy String?
+  @@index([deviceId, resolvedAt])
+}
+model Notification {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title String
+  message String
+  href String
+  createdAt DateTime @default(now())
+  readAt DateTime?
+  @@index([userId, readAt])
+}
+model ControlField {
+  id String @id @default(cuid())
+  deviceId String
+  device Device @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  key String
+  metadata Json
+  @@unique([deviceId, key])
+}
+model ControlAction {
+  id String @id @default(cuid())
+  deviceId String
+  device Device @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  userId String
+  idempotencyKey String @unique
+  fieldKey String
+  fieldTitle String
+  oldValue Json
+  requestedValue Json
+  status String @default("QUEUED")
+  requestedAt DateTime @default(now())
+  completedAt DateTime?
+  detail String?
+  transitions Json @default("[]")
+  @@index([deviceId, requestedAt])
+}
+model SyncJob {
+  id String @id @default(cuid())
+  integrationId String
+  integration SolarIntegration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+  startedAt DateTime @default(now())
+  finishedAt DateTime?
+  status String
+  records Int @default(0)
+  error String?
+  @@index([integrationId, startedAt])
+}
+model AuditLog {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event String
+  metadata Json
+  createdAt DateTime @default(now())
+  @@index([userId, createdAt])
+}
+model RateLimit {
+  key String @id
+  count Int @default(1)
+  expiresAt DateTime
+}

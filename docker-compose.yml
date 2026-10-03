@@ -1,0 +1,13 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: solar
+      POSTGRES_USER: solar
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a local database password}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - solar_data:/var/lib/postgresql/data
+volumes:
+  solar_data:

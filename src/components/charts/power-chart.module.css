@@ -1,0 +1,185 @@
+.root {
+  width: 100%;
+  min-width: 0;
+}
+
+.plot {
+  min-width: 0;
+}
+
+.navigation {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.navigationHeading,
+.actions,
+.navigationFootnote {
+  display: flex;
+  align-items: center;
+}
+
+.navigationHeading {
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.range {
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+}
+
+.actions {
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.iconButton,
+.textButton {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 28px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 500;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease;
+}
+
+.iconButton {
+  width: 28px;
+  padding: 0;
+}
+
+.textButton {
+  padding: 4px 9px;
+}
+
+.iconButton:hover:not(:disabled),
+.textButton:hover:not(:disabled),
+.textButton[aria-pressed="true"] {
+  background: var(--green-soft);
+  border-color: var(--green);
+}
+
+.iconButton:disabled,
+.textButton:disabled {
+  opacity: 0.48;
+  cursor: default;
+}
+
+.iconButton:focus-visible,
+.textButton:focus-visible,
+.timelineScrollbar:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+}
+
+.timelineShell {
+  position: relative;
+  height: 22px;
+  margin-top: 5px;
+}
+
+.timelineShell::before,
+.selectionRail {
+  position: absolute;
+  top: 13px;
+  height: 6px;
+  border-radius: 5px;
+  pointer-events: none;
+}
+
+.timelineShell::before {
+  content: "";
+  left: 0;
+  width: 100%;
+  background: var(--green-soft);
+}
+
+.selectionRail {
+  background: var(--green);
+}
+
+.timelineScrollbar {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 22px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-color: var(--green) var(--green-soft);
+  scrollbar-width: thin;
+  border-radius: 5px;
+  touch-action: pan-x;
+}
+
+.timelineScrollbar::-webkit-scrollbar {
+  height: 8px;
+}
+
+.timelineScrollbar::-webkit-scrollbar-track {
+  background: var(--green-soft);
+  border-radius: 5px;
+}
+
+.timelineScrollbar::-webkit-scrollbar-thumb {
+  background: var(--green);
+  border-radius: 5px;
+}
+
+.timelineTrack {
+  height: 1px;
+  min-width: 100%;
+}
+
+.navigationFootnote {
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 9px;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 600px) {
+  .navigation {
+    margin-top: 10px;
+  }
+
+  .navigationHeading {
+    gap: 6px;
+  }
+
+  .iconButton,
+  .textButton {
+    min-height: 34px;
+  }
+
+  .iconButton {
+    width: 34px;
+  }
+
+  .navigationFootnote > span:nth-child(2) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iconButton,
+  .textButton {
+    transition: none;
+  }
+}

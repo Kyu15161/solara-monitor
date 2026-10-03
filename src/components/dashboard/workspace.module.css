@@ -1,0 +1,1301 @@
+/* Shared presentation layer for authenticated energy workspaces. */
+:global(body):has(.workspace) {
+  background: #e8ebea;
+}
+
+.workspace:global(.app-shell)[data-section] {
+  --workspace-column: 224px;
+  --workspace-padding: 16px;
+  --bg: #f5f7f6;
+  --card: #ffffff;
+  --panel-bg: #ffffff;
+  --sidebar: #f5f7f6;
+  --text: #17241d;
+  --muted: #64736b;
+  --border: #e5ebe7;
+  --green: #176b48;
+  --green-soft: #e9f4ed;
+  --solar: #176b48;
+  --solar-soft: #e9f4ed;
+  --blue: #476b80;
+  --blue-soft: #edf3f6;
+  --purple: #756c63;
+  --purple-soft: #f0eef6;
+  --warning: #886224;
+  --warning-soft: #faf3e7;
+  --error: #b24444;
+  --error-soft: #fff0ee;
+  --neutral: #68726d;
+  --hover: #edf2ef;
+  --shadow: 0 3px 14px #1d3b2704;
+  --radius: 20px;
+  --radius-small: 12px;
+  --chart-solar: #228358;
+  --chart-load: #496c80;
+  --chart-battery: #60a584;
+  --chart-grid: #827a70;
+  --diagram-ink: #759084;
+  --diagram-grid: #75908410;
+  --ambient-solar: transparent;
+  --ambient-blue: transparent;
+  --ambient-battery: transparent;
+  --ambient-grid: transparent;
+  --font-value: 40px;
+  --motion: 180ms;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: var(--workspace-column) minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  width: calc(100% - 48px);
+  max-width: 1480px;
+  min-height: calc(100vh - 48px);
+  height: calc(100dvh - 48px);
+  margin: 24px auto;
+  padding: var(--workspace-padding);
+  border: 1px solid #ffffff;
+  border-radius: 30px;
+  background: #ffffff;
+  color: var(--text);
+  box-shadow: 0 16px 56px #17362908;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* The material spans the full frame while navigation stays within reach. */
+.workspace:global(.app-shell)[data-section]::before {
+  content: "";
+  position: absolute;
+  top: var(--workspace-padding);
+  bottom: var(--workspace-padding);
+  left: var(--workspace-padding);
+  width: var(--workspace-column);
+  border-radius: 20px;
+  background: var(--sidebar);
+  pointer-events: none;
+  z-index: -1;
+}
+
+:global([data-theme="dark"]) .workspace:global(.app-shell)[data-section] {
+  --bg: #202a25;
+  --card: #29342d;
+  --panel-bg: #29342d;
+  --sidebar: #202a25;
+  --text: #eff6f0;
+  --muted: #b2c0b7;
+  --border: #3c4a41;
+  --green: #94d1ac;
+  --green-soft: #31483b;
+  --solar: #94d1ac;
+  --solar-soft: #31483b;
+  --blue: #a4c7d8;
+  --blue-soft: #33444c;
+  --purple: #c9c0b3;
+  --purple-soft: #403c4b;
+  --warning: #e6c487;
+  --warning-soft: #493e2b;
+  --error: #f1abaa;
+  --error-soft: #4e3333;
+  --neutral: #b2bbb5;
+  --hover: #334239;
+  --chart-solar: #94d1ac;
+  --chart-load: #a4c7d8;
+  --chart-battery: #69b591;
+  --chart-grid: #c9c0b3;
+  --diagram-ink: #a2b8aa;
+  --diagram-grid: #a2b8aa10;
+  --shadow: 0 3px 16px #101b150d;
+  border-color: #3c4a41;
+  background: #19231d;
+  box-shadow: 0 16px 56px #0b160f18;
+  color-scheme: dark;
+}
+
+:global(body[data-theme="dark"]):has(.workspace),
+:global([data-theme="dark"] body):has(.workspace) {
+  background: #162019;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.sidebar) {
+  position: relative;
+  inset: auto;
+  top: auto;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 24px 14px 0;
+  border: 0;
+  border-radius: 20px;
+  background: var(--sidebar);
+  color: var(--text);
+  --text: inherit;
+  --muted: inherit;
+  --border: inherit;
+  --green: inherit;
+  --hover: inherit;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  overflow: visible;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.sidebar > nav) {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.workspace:global(.app-shell)[data-section] :global(.sidebar > :not(nav)) {
+  flex-shrink: 0;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.brand) {
+  gap: 9px;
+  padding: 0 10px 19px;
+  font-size: 27px;
+  font-weight: 650;
+  letter-spacing: -1.25px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.brand-icon) {
+  width: 33px;
+  height: 33px;
+  color: var(--green);
+  border: 1.5px solid var(--green);
+  border-radius: 50%;
+  background: transparent;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.brand-icon svg) {
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.65;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.brand-tag) {
+  margin-left: 42px;
+  margin-top: -13px;
+  font-size: 7px;
+  letter-spacing: 1.3px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.workspace-label),
+.workspace:global(.app-shell)[data-section] :global(.nav-label) {
+  padding: 13px 10px 8px;
+  margin: 0;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.workspace-chip) {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  gap: 8px;
+  padding: 9px;
+  margin: 0 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  font-size: 11px;
+  color: var(--text);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.workspace-chip > div) {
+  padding: 7px;
+  border-radius: 9px;
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.workspace-chip small) {
+  font-size: 9px;
+  color: var(--muted);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.nav-item) {
+  min-height: 36px;
+  gap: 11px;
+  padding: 8px 11px;
+  margin: 3px 0;
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  transform: none;
+  transition:
+    background 180ms ease,
+    color 180ms ease;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.nav-item:hover) {
+  color: var(--green);
+  background: var(--hover);
+  transform: none;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.nav-item.active) {
+  background: var(--green-soft);
+  color: var(--green);
+  font-weight: 650;
+  box-shadow: none;
+  animation: none;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.nav-item.active::before) {
+  left: -14px;
+  top: 7px;
+  bottom: 7px;
+  width: 4px;
+  border-radius: 0 4px 4px 0;
+  background: var(--green);
+  animation: none;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.nav-item svg) {
+  width: 17px;
+  height: 17px;
+  stroke-width: 1.6;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.nav-count) {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--green);
+  color: var(--card);
+  font-size: 9px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.sidebar-bottom) {
+  margin-top: 10px;
+  padding-top: 0;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.sidebar-note) {
+  padding: 12px 10px;
+  margin: 10px 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: var(--green-soft);
+  color: var(--green);
+  font-size: 10px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.sidebar-note small) {
+  margin: 0;
+  padding-top: 5px;
+  font-size: 9px;
+  color: var(--green);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.profile) {
+  width: 100%;
+  padding: 14px;
+  margin-left: 0;
+  border-top: 1px solid var(--border);
+  color: var(--text);
+  font-size: 11px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.avatar) {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--green-soft);
+  color: var(--green);
+  font-size: 13px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.header-account) {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 3px;
+  border-radius: 24px;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  text-align: left;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.header-avatar) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--green-soft);
+  color: var(--green);
+  font-size: 14px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.header-identity) {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  max-width: 220px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.header-identity strong) {
+  font-size: 12px;
+  font-weight: 550;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.header-identity small) {
+  font-size: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: var(--muted);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.header-account:hover) {
+  background: var(--green-soft);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.app-content) {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.topbar) {
+  flex-shrink: 0;
+  height: 76px;
+  padding: 0 20px;
+  gap: 12px;
+  border: 0;
+  border-radius: 20px;
+  background: var(--bg);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.breadcrumb) {
+  display: none;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.topbar-tools) {
+  width: 100%;
+  gap: 12px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.search-box) {
+  width: min(360px, 50%);
+  min-width: 100px;
+  min-height: 44px;
+  padding: 0 15px;
+  margin-right: auto;
+  gap: 10px;
+  border: 1px solid transparent;
+  border-radius: 24px;
+  background: var(--card);
+  color: var(--muted);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.search-box input) {
+  width: 100%;
+  min-width: 0;
+  padding: 6px 0;
+  color: var(--text);
+  font-size: 12px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.search-box kbd) {
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.search-box:focus-within) {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+  border-radius: 24px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.topbar .button-icon) {
+  width: 42px;
+  height: 42px;
+  min-height: 42px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--card);
+}
+
+.workspace:global(.app-shell)[data-section]
+  :global(.topbar .button-icon:hover) {
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.search-results),
+.workspace:global(.app-shell)[data-section] :global(.notification-panel) {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--text);
+  box-shadow: 0 12px 36px #183b2614;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.search-results a),
+.workspace:global(.app-shell)[data-section]
+  :global(.notification-panel > button) {
+  border-radius: 9px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.main-content) {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  padding: 20px 20px 0;
+  margin: 10px 0 0;
+  border-radius: 20px;
+  background: var(--bg);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  scroll-padding: 20px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(a.metric) {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+.workspace:global(.app-shell)[data-section] :global(a.metric:hover) {
+  border-color: var(--green);
+  box-shadow: 0 5px 18px #176b4814;
+}
+.workspace:global(.app-shell)[data-section] :global(a.metric:focus-visible) {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.demo-banner) {
+  gap: 12px;
+  padding: 0 0 15px;
+  color: var(--muted);
+  font-size: 10px;
+  background: transparent;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.demo-pill) {
+  padding: 3px 7px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--card);
+  color: var(--green);
+  font-size: 8px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.page-heading) {
+  --text: inherit;
+  --muted: inherit;
+  --card: inherit;
+  --border: inherit;
+  min-height: 0;
+  padding: 0;
+  margin-bottom: 18px;
+  gap: 20px;
+  border: 0;
+  border-radius: 0;
+  color: var(--text);
+  background: transparent;
+  box-shadow: none;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.page-heading::before) {
+  content: none;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.page-heading h1) {
+  font-size: 34px;
+  font-weight: 550;
+  line-height: 1.18;
+  letter-spacing: -1.3px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.page-heading .eyebrow) {
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.page-heading p) {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.heading-actions) {
+  gap: 9px;
+  align-self: center;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.device-select) {
+  min-height: 40px;
+  padding: 0 11px;
+  border-radius: 22px;
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--text);
+  backdrop-filter: none;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.device-select select) {
+  min-height: 38px;
+  font-size: 11px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.freshness-strip) {
+  gap: 12px 18px;
+  padding: 10px 0 14px;
+  margin-bottom: 18px;
+  border: 0;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.status-badge) {
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--card);
+  font-size: 9px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.metrics) {
+  gap: 12px;
+  margin-bottom: 18px;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+  box-shadow: none;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.metric) {
+  min-width: 0;
+  min-height: 146px;
+  padding: 19px;
+  border: 1px solid #ffffff00;
+  border-radius: 19px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.metric:hover) {
+  border-color: var(--border);
+  box-shadow: 0 5px 18px #21432f08;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.metric-top) {
+  justify-content: space-between;
+  margin-bottom: 14px;
+  gap: 8px;
+  color: var(--text);
+  font-size: 12px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.metric-icon) {
+  order: 0;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--green);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.metric-icon svg) {
+  width: 15px;
+  height: 15px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.metric strong) {
+  font-size: var(--font-value);
+  font-weight: 500;
+  letter-spacing: -1.5px;
+  line-height: 1.05;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.metric p) {
+  margin-top: 12px;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.panel) {
+  min-width: 0;
+  padding: 22px;
+  margin-bottom: 18px;
+  border: 1px solid #ffffff00;
+  border-radius: 20px;
+  background: var(--panel-bg);
+  box-shadow: var(--shadow);
+  animation: none;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.panel:hover) {
+  border-color: var(--border);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.panel-heading) {
+  margin-bottom: 18px;
+  gap: 14px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.panel-heading h2) {
+  font-size: 16px;
+  font-weight: 550;
+  letter-spacing: -0.4px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.panel-heading p) {
+  margin-top: 5px;
+  font-size: 11px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.button) {
+  min-height: 38px;
+  padding: 9px 15px;
+  border-radius: 22px;
+  font-size: 11px;
+  font-weight: 550;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.button-primary) {
+  border-color: var(--green);
+  background: var(--green);
+  color: var(--card);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.button-primary:hover) {
+  background: color-mix(in srgb, var(--green), var(--text) 12%);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.button-outline) {
+  border-color: var(--green);
+  background: var(--card);
+  color: var(--green);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.button-outline:hover) {
+  background: var(--green-soft);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.button-icon) {
+  width: 36px;
+  height: 36px;
+  min-height: 36px;
+  padding: 7px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.button-small),
+.workspace:global(.app-shell)[data-section] :global(.button-sm) {
+  min-height: 30px;
+  padding: 6px 11px;
+  font-size: 10px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(input),
+.workspace:global(.app-shell)[data-section] :global(select),
+.workspace:global(.app-shell)[data-section] :global(textarea) {
+  border-color: var(--border);
+  border-radius: 11px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 12px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(input:focus),
+.workspace:global(.app-shell)[data-section] :global(select:focus),
+.workspace:global(.app-shell)[data-section] :global(textarea:focus) {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px var(--green-soft);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.search-box input),
+.workspace:global(.app-shell)[data-section] :global(.device-select select) {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.text-link),
+.workspace:global(.app-shell)[data-section] :global(.icon-link) {
+  color: var(--green);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.notice) {
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  border-radius: 14px;
+  background: var(--card);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.error-message) {
+  border-radius: 12px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.segmented) {
+  padding: 4px;
+  border: 0;
+  border-radius: 20px;
+  background: var(--card);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.segmented button) {
+  padding: 8px 13px;
+  border-radius: 16px;
+}
+
+.workspace:global(.app-shell)[data-section]
+  :global(.segmented button.selected) {
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.filter-bar) {
+  gap: 12px;
+  padding: 10px 0 18px;
+  margin-bottom: 18px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.two-col),
+.workspace:global(.app-shell)[data-section] :global(.settings-grid) {
+  gap: 18px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.settings-grid > .panel) {
+  padding: 22px;
+  margin-bottom: 18px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.settings-form) {
+  gap: 16px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.control-grid) {
+  padding: 0 22px;
+  margin-bottom: 18px;
+  border: 0;
+  border-radius: 20px;
+  background: var(--card);
+}
+
+.workspace:global(.app-shell)[data-section]
+  :global(.control-grid .hardware-setting) {
+  padding: 25px 0;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.workspace:global(.app-shell)[data-section]
+  :global(.control-grid .hardware-setting:last-child) {
+  border-bottom: 0;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.table-scroll) {
+  border-color: var(--border);
+  border-radius: 12px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(th) {
+  padding: 12px 14px;
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(td) {
+  padding: 13px 14px;
+  font-size: 11px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.integration-mark),
+.workspace:global(.app-shell)[data-section] :global(.integration-card),
+.workspace:global(.app-shell)[data-section] :global(.raw-data) {
+  border-radius: 12px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.parameter-grid) {
+  gap: 0 18px;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.parameter-grid > div) {
+  padding: 17px 0;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.flow-wrap) {
+  background: transparent;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.flow-wrap::before) {
+  opacity: 0;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.flow-illustration) {
+  background: var(--green-soft);
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.workspace:global(.app-shell)[data-section]
+  :global(.flow-illustration::before) {
+  display: none;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.flow-dash) {
+  filter: none;
+}
+
+.workspace:global(.app-shell)[data-section]
+  :global(.recharts-cartesian-grid line) {
+  opacity: 0.38;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.recharts-area-curve),
+.workspace:global(.app-shell)[data-section] :global(.recharts-area-area),
+.workspace:global(.app-shell)[data-section] :global(.recharts-bar-rectangle) {
+  animation: none;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.telemetry-tooltip) {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  box-shadow: 0 8px 24px #183b2614;
+}
+
+.workspace:global(.app-shell)[data-section]
+  :global(.recharts-legend-item-text) {
+  color: var(--muted) !important;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.health-list > div) {
+  padding: 12px 0;
+}
+
+.workspace:global(.app-shell)[data-section] :global(.alert-symbol) {
+  border-radius: 9px;
+  background: var(--warning-soft);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.alert-symbol.critical) {
+  background: var(--error-soft);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.alert-symbol.info) {
+  background: var(--blue-soft);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.alert-symbol.resolved) {
+  background: var(--green-soft);
+}
+
+.workspace:global(.app-shell)[data-section] :global(.page-footer) {
+  padding: 18px 0;
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.workspace:global(.app-shell)[data-section]:global(.monitor-mode) {
+  display: block;
+  width: calc(100% - 32px);
+  padding: 12px;
+  margin: 16px auto;
+  min-height: calc(100vh - 32px);
+  height: auto;
+}
+
+.workspace:global(.app-shell)[data-section]:global(.monitor-mode)::before {
+  display: none;
+}
+
+.workspace:global(.app-shell)[data-section]:global(.monitor-mode)
+  :global(.sidebar),
+.workspace:global(.app-shell)[data-section]:global(.monitor-mode)
+  :global(.topbar) {
+  display: none;
+}
+
+.workspace:global(.app-shell)[data-section]:global(.monitor-mode)
+  :global(.main-content) {
+  margin: 0;
+}
+
+:global(body):has(.workspace) :global(.dialog) {
+  border-radius: 22px;
+  background: #ffffff;
+  color: #17241d;
+  --text: #17241d;
+  --muted: #64736b;
+  --card: #ffffff;
+  --border: #e5ebe7;
+  --green: #176b48;
+  --green-soft: #e9f4ed;
+}
+
+:global([data-theme="dark"] body):has(.workspace) :global(.dialog) {
+  background: #29342d;
+  color: #eff6f0;
+  --text: #eff6f0;
+  --muted: #b2c0b7;
+  --card: #29342d;
+  --border: #3c4a41;
+  --green: #94d1ac;
+  --green-soft: #31483b;
+}
+
+@media (max-width: 1200px) {
+  .workspace:global(.app-shell)[data-section] {
+    --workspace-column: 208px;
+    --workspace-padding: 12px;
+    width: calc(100% - 32px);
+    margin: 16px auto;
+    height: calc(100dvh - 32px);
+    min-height: 0;
+    --font-value: 35px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.sidebar) {
+    top: auto;
+    height: 100%;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.main-content),
+  .workspace:global(.app-shell)[data-section] :global(.topbar) {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.metric) {
+    padding: 17px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .workspace:global(.app-shell)[data-section] {
+    --workspace-column: 64px;
+    gap: 10px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.sidebar) {
+    min-height: 0;
+    padding: 20px 8px 0;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.brand) {
+    padding: 0 7px;
+    font-size: 0;
+    gap: 0;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.brand-icon) {
+    width: 33px;
+    height: 33px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.nav-item) {
+    padding: 10px 7px;
+    margin: 5px 0;
+    font-size: 0;
+  }
+
+  .workspace:global(.app-shell)[data-section]
+    :global(.nav-item.active::before) {
+    left: -8px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.profile) {
+    width: 100%;
+    margin-left: 0;
+    padding: 15px 8px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.heading-actions) {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.page-heading h1) {
+    font-size: 31px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.header-identity) {
+    display: none;
+  }
+}
+
+@media (max-width: 800px) {
+  .workspace:global(.app-shell)[data-section] :global(.metrics) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.metric) {
+    min-height: 136px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.panel) {
+    padding: 20px;
+  }
+
+  .workspace:global(.app-shell)[data-section]
+    :global(.control-grid .hardware-setting) {
+    grid-template-columns: minmax(150px, 0.9fr) minmax(190px, 1fr);
+    gap: 0 22px;
+  }
+}
+
+@media (max-width: 600px) {
+  .workspace:global(.app-shell)[data-section] {
+    display: block;
+    width: calc(100% - 16px);
+    min-height: calc(100vh - 16px);
+    height: auto;
+    margin: 8px auto;
+    padding: 7px;
+    border-radius: 23px;
+    --font-value: 34px;
+  }
+
+  .workspace:global(.app-shell)[data-section]::before {
+    display: none;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.sidebar) {
+    display: none;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.sidebar.open) {
+    display: flex;
+    position: fixed;
+    inset: 12px auto 12px 12px;
+    top: 12px;
+    width: 240px;
+    height: calc(100vh - 24px);
+    min-height: 0;
+    padding: 24px 14px 0;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    box-shadow: 0 12px 48px #132b2426;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.sidebar.open .brand) {
+    font-size: 27px;
+    gap: 9px;
+    padding: 0 10px 19px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.sidebar.open .nav-item) {
+    font-size: 12px;
+    margin: 3px 0;
+    padding: 8px 11px;
+  }
+
+  .workspace:global(.app-shell)[data-section]
+    :global(.sidebar.open .nav-item.active::before) {
+    left: -14px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.sidebar.open .profile) {
+    width: 100%;
+    margin-left: 0;
+    padding: 14px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.drawer-backdrop) {
+    background: #172e2440;
+    backdrop-filter: blur(2px);
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.topbar) {
+    height: 62px;
+    gap: 8px;
+    padding: 0 10px;
+    border-radius: 16px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.topbar-tools) {
+    width: auto;
+    min-width: 0;
+    flex: 1;
+    gap: 6px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.search-box) {
+    display: flex;
+    width: auto;
+    min-width: 0;
+    min-height: 36px;
+    padding: 0 10px;
+    flex: 1;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.search-box input) {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    font-size: 10px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.search-box kbd) {
+    display: none;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.topbar .button-icon) {
+    width: 33px;
+    height: 33px;
+    min-height: 33px;
+    flex-shrink: 0;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.avatar.small) {
+    width: 31px;
+    height: 31px;
+    flex-shrink: 0;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.header-avatar) {
+    width: 31px;
+    height: 31px;
+    font-size: 12px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.main-content) {
+    padding: 16px 12px 0;
+    margin-top: 7px;
+    border-radius: 16px;
+    overflow: visible;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.page-heading) {
+    gap: 14px;
+    margin-bottom: 14px;
+    padding: 0;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.page-heading h1) {
+    font-size: 29px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.heading-actions) {
+    width: 100%;
+    align-self: stretch;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 7px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.device-select) {
+    min-width: 0;
+    padding: 0 9px;
+    flex: 1;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.device-select select) {
+    min-width: 0;
+    max-width: 100%;
+    padding: 5px 0;
+    font-size: 10px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.freshness-strip) {
+    gap: 8px 11px;
+    margin-bottom: 15px;
+    font-size: 9px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.metric) {
+    padding: 16px 13px;
+    min-height: 133px;
+    border: 1px solid transparent;
+    border-radius: 16px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.metric-top) {
+    font-size: 10px;
+    margin-bottom: 12px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.metric p) {
+    font-size: 9px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.panel) {
+    padding: 18px 15px;
+    border-radius: 17px;
+    margin-bottom: 15px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.panel-heading h2) {
+    font-size: 15px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.panel-heading p) {
+    font-size: 10px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.settings-grid > .panel) {
+    padding: 18px 15px;
+    margin-bottom: 15px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.control-grid) {
+    padding: 0 16px;
+  }
+
+  .workspace:global(.app-shell)[data-section]
+    :global(.control-grid .hardware-setting) {
+    display: block;
+    padding: 22px 0;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.notification-panel) {
+    top: 52px;
+  }
+
+  .workspace:global(.app-shell)[data-section] :global(.search-results) {
+    width: min(300px, calc(100vw - 60px));
+  }
+
+  .workspace:global(.app-shell)[data-section]:global(.monitor-mode) {
+    width: calc(100% - 16px);
+    padding: 7px;
+    margin: 8px auto;
+  }
+}

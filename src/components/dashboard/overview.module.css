@@ -1,0 +1,751 @@
+/* Overview composition adapted from the supplied soft green reference.
+   Only presentation changes; custom widget layouts retain DOM ordering. */
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.main-content .page-heading) {
+  position: relative;
+  isolation: auto;
+  min-height: 0;
+  margin: 0 0 16px;
+  padding: 8px 0 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  color: var(--text);
+  --text: inherit;
+  --muted: inherit;
+  --card: inherit;
+  --border: inherit;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.page-heading::before) {
+  content: none;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.main-content .page-heading h1) {
+  font-size: clamp(32px, 2.6vw, 40px);
+  font-weight: 550;
+  line-height: 1.15;
+  letter-spacing: -1.6px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.main-content .page-heading p) {
+  max-width: none;
+  margin-top: 7px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.main-content .page-heading .eyebrow) {
+  margin-bottom: 5px;
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 1.4px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.page-heading .heading-actions) {
+  align-self: center;
+  flex-direction: row;
+  max-width: none;
+  gap: 8px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.heading-actions .device-select),
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.heading-actions > .button) {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  backdrop-filter: none;
+  border-radius: 24px;
+  min-height: 38px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.heading-actions > .button:hover) {
+  background: var(--green-soft);
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.freshness-strip) {
+  margin-bottom: 14px;
+  padding: 8px 0;
+  border: 0;
+  gap: 16px;
+  font-size: 10px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.freshness-strip b) {
+  font-size: 10px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(
+    .overview-widgets:has(
+      > .widget-metrics:first-child
+        + .widget-flow
+        + .widget-health
+        + .widget-chart
+        + .widget-alerts:last-child
+    )
+  ) {
+  grid-template-columns: minmax(0, 2.05fr) minmax(274px, 1fr);
+  grid-template-areas: "metrics metrics" "chart health" "flow alerts";
+  --metrics-area: metrics;
+  --chart-area: chart;
+  --health-area: health;
+  --flow-area: flow;
+  --alerts-area: alerts;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets > div) {
+  grid-column: 1 / -1;
+  margin: 0;
+  min-width: 0;
+  order: 0;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets > .widget-metrics) {
+  grid-area: var(--metrics-area, auto);
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets > .widget-chart) {
+  grid-area: var(--chart-area, auto);
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets > .widget-health) {
+  grid-area: var(--health-area, auto);
+  align-self: stretch;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets > .widget-flow) {
+  grid-area: var(--flow-area, auto);
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets > .widget-alerts) {
+  grid-area: var(--alerts-area, auto);
+  align-self: stretch;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .panel) {
+  min-height: 0;
+  height: 100%;
+  padding: 20px;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--card);
+  box-shadow: 0 3px 14px #263e2e03;
+  animation: overview-in 300ms ease-out both;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .widget-flow .panel),
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .widget-health .panel),
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .widget-alerts .panel) {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--card);
+  padding: 20px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .panel:hover) {
+  border-color: var(--border);
+  box-shadow: 0 5px 20px #263e2e08;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .panel-heading) {
+  margin-bottom: 14px;
+  gap: 8px;
+  align-items: flex-start;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .panel-heading h2) {
+  font-size: 17px;
+  font-weight: 550;
+  letter-spacing: -0.5px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .panel-heading p) {
+  font-size: 11px;
+  margin-top: 4px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .metrics) {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: none;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .metric) {
+  min-width: 0;
+  min-height: 151px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--card);
+  box-shadow: 0 3px 14px #263e2e03;
+  transition:
+    box-shadow 180ms,
+    transform 180ms;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .metric:hover) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px #263e2e09;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .metric-top) {
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 14px;
+  gap: 6px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .metric-icon) {
+  order: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 29px;
+  height: 29px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--green);
+  background: none;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.metric-icon svg) {
+  width: 15px;
+  height: 15px;
+  stroke-width: 1.6;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .metric strong) {
+  font-size: clamp(36px, 3.1vw, 49px);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -1.8px;
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .metric p) {
+  font-size: 11px;
+  line-height: 1.5;
+  margin-top: 11px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .metric-solar) {
+  --text: #f6fff5;
+  --muted: #e0eee2;
+  --border: #a0ccb160;
+  background: #176749;
+  border-color: #176749;
+  color: var(--text);
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .metric-solar .metric-icon) {
+  color: #176749;
+  background: #f2fff3;
+  border-color: #f2fff3;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .metric-solar p) {
+  color: #d9edcf;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .metric-solar .reading-unit) {
+  color: #e0eee2;
+}
+.overview:global(.app-shell)[data-section="overview"] :global(.reading-number) {
+  animation: none;
+}
+.overview:global(.app-shell)[data-section="overview"] :global(.energy-summary) {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 0 0 12px;
+  margin: 0 0 14px;
+  border-bottom: 1px solid var(--border);
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.energy-summary > div) {
+  min-width: 0;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.energy-summary span) {
+  font-size: 10px;
+  margin-bottom: 5px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.energy-summary strong) {
+  display: block;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.7px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.energy-summary > div + div) {
+  padding-left: 12px;
+  border-left: 1px solid var(--border);
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.widget-chart .chart) {
+  height: 225px;
+}
+.overview:global(.app-shell)[data-section="overview"] :global(.chart-caption) {
+  font-size: 10px;
+  margin-top: 8px;
+  line-height: 1.6;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .widget-health .panel) {
+  display: flex;
+  flex-direction: column;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .widget-health .health-list) {
+  display: block;
+  margin: 0;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .widget-health .health-list > div) {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 0;
+  font-size: 12px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.health-list strong) {
+  font-size: 12px;
+  font-weight: 500;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.overview-widgets .widget-health .health-list > div:last-child) {
+  padding: 14px 0 4px;
+  border: 0;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.health-list > div:last-child strong) {
+  font-size: 25px;
+  font-weight: 500;
+  letter-spacing: -0.7px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.health-list > div:last-child .dot) {
+  display: none;
+}
+.overview:global(.app-shell)[data-section="overview"] :global(.health-foot) {
+  margin-top: auto;
+  padding-top: 16px;
+  font-size: 11px;
+  color: var(--green);
+}
+.overview:global(.app-shell)[data-section="overview"] :global(.flow-wrap) {
+  height: 246px;
+  background: none;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.flow-wrap::before) {
+  content: none;
+}
+.overview:global(.app-shell)[data-section="overview"] :global(.flow-lines) {
+  filter: none;
+}
+.overview:global(.app-shell)[data-section="overview"] :global(.flow-dash) {
+  animation-duration: 4s;
+}
+.overview:global(.app-shell)[data-section="overview"] :global(.flow-node) {
+  width: 128px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.flow-illustration) {
+  width: 72px;
+  height: 60px;
+  border-radius: 15px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.equipment-glyph) {
+  width: 65px;
+  height: 51px;
+  color: var(--diagram-ink);
+  filter: none;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.flow-node:hover .equipment-glyph) {
+  filter: none;
+}
+.overview:global(.app-shell)[data-section="overview"] :global(.flow-solar),
+.overview:global(.app-shell)[data-section="overview"] :global(.flow-home) {
+  top: 4px;
+}
+.overview:global(.app-shell)[data-section="overview"] :global(.flow-label) {
+  font-size: 9px;
+  letter-spacing: 1px;
+  margin: 4px 0;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.flow-node strong) {
+  font-size: 25px;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.8px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.flow-node small) {
+  max-width: 126px;
+  margin-top: 4px;
+  font-size: 10px;
+  line-height: 1.4;
+}
+.overview:global(.app-shell)[data-section="overview"] :global(.flow-battery),
+.overview:global(.app-shell)[data-section="overview"] :global(.flow-grid) {
+  bottom: 0;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.flow-battery .flow-illustration),
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.flow-grid .flow-illustration) {
+  background: transparent;
+  border-color: transparent;
+  height: 54px;
+}
+.overview:global(.app-shell)[data-section="overview"] :global(.flow-inverter) {
+  top: 0;
+  width: 100px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.flow-inverter .flow-illustration) {
+  width: 78px;
+  height: 77px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.flow-inverter .equipment-glyph) {
+  width: 74px;
+  height: 69px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.flow-inverter > span:not(.flow-illustration)) {
+  font-size: 9px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.flow-inverter small) {
+  font-size: 10px;
+  margin-top: 3px;
+}
+.overview:global(.app-shell)[data-section="overview"] :global(.flow-footer) {
+  padding-top: 9px;
+  margin-top: 6px;
+  border-top: 1px solid var(--border);
+  font-size: 10px;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.widget-alerts .compact-alerts) {
+  display: block;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.compact-alerts > div) {
+  gap: 10px;
+  padding: 17px 0;
+  border-top: 0;
+  border-bottom: 1px solid var(--border);
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.compact-alerts > div:last-child) {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.compact-alerts strong) {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.overview:global(.app-shell)[data-section="overview"]
+  :global(.compact-alerts small) {
+  font-family: inherit;
+  font-size: 10px;
+  margin-top: 5px;
+  line-height: 1.5;
+}
+.overview:global(.app-shell)[data-section="overview"] :global(.alert-symbol) {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  background: var(--bg);
+}
+.overview:global(.app-shell)[data-section="overview"] :global(.text-link) {
+  font-size: 10px;
+  color: var(--green);
+}
+@keyframes overview-in {
+  from {
+    opacity: 0.5;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (max-width: 1200px) {
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.page-heading .heading-actions) {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.overview-widgets .metric) {
+    padding: 16px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.overview-widgets .metric-top) {
+    font-size: 11px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.overview-widgets .metric strong) {
+    font-size: 39px;
+  }
+}
+@media (max-width: 1000px) {
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(
+      .overview-widgets:has(
+        > .widget-metrics:first-child
+          + .widget-flow
+          + .widget-health
+          + .widget-chart
+          + .widget-alerts:last-child
+      )
+    ) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "metrics" "chart" "health" "flow" "alerts";
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.overview-widgets .metrics) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.overview-widgets .metric) {
+    min-height: 135px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.overview-widgets .metric-top) {
+    font-size: 13px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.overview-widgets .widget-health .health-list) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px 16px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.overview-widgets .widget-health .health-list > div) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 10px 0;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.overview-widgets .widget-health .health-list > div:last-child) {
+    padding: 10px 0;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.health-list > div:last-child strong) {
+    font-size: 20px;
+  }
+  .overview:global(.app-shell)[data-section="overview"] :global(.health-foot) {
+    margin-top: 8px;
+  }
+  .overview:global(.app-shell)[data-section="overview"] :global(.flow-wrap) {
+    height: 270px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.widget-alerts .compact-alerts) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+@media (max-width: 600px) {
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.main-content .page-heading) {
+    padding: 3px 0 0;
+    gap: 14px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.main-content .page-heading h1) {
+    font-size: 32px;
+    letter-spacing: -1.2px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.main-content .page-heading p) {
+    font-size: 11px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.page-heading .heading-actions) {
+    flex-direction: row;
+    width: 100%;
+    align-items: stretch;
+    gap: 7px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(
+      .overview-widgets:has(
+        > .widget-metrics:first-child
+          + .widget-flow
+          + .widget-health
+          + .widget-chart
+          + .widget-alerts:last-child
+      )
+    ) {
+    grid-template-areas: "metrics" "health" "flow" "alerts" "chart";
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.freshness-strip) {
+    gap: 6px 12px;
+    padding: 5px 0;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.freshness-strip b) {
+    font-size: 9px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.overview-widgets .panel),
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.overview-widgets .widget-health .panel),
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.overview-widgets .widget-flow .panel),
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.overview-widgets .widget-alerts .panel) {
+    padding: 17px 15px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.overview-widgets .metric) {
+    min-height: 139px;
+    padding: 15px 13px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.overview-widgets .metric-top) {
+    font-size: 11px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.overview-widgets .metric-icon) {
+    width: 24px;
+    height: 24px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.overview-widgets .metric strong) {
+    font-size: clamp(30px, 8.8vw, 35px);
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.overview-widgets .metric p) {
+    font-size: 10px;
+    margin-top: 9px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.overview-widgets .widget-health .health-list) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .overview:global(.app-shell)[data-section="overview"] :global(.flow-wrap) {
+    height: 255px;
+  }
+  .overview:global(.app-shell)[data-section="overview"] :global(.flow-node) {
+    width: 96px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.flow-illustration) {
+    width: 58px;
+    height: 52px;
+    border-radius: 12px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.equipment-glyph) {
+    width: 54px;
+    height: 43px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.flow-node strong) {
+    font-size: 22px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.flow-node small) {
+    font-size: 9px;
+    max-width: 95px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.flow-inverter) {
+    width: 80px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.flow-inverter .flow-illustration) {
+    width: 62px;
+    height: 69px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.flow-inverter .equipment-glyph) {
+    width: 59px;
+    height: 61px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.flow-inverter small),
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.flow-inverter > span:not(.flow-illustration)) {
+    font-size: 8px;
+  }
+  .overview:global(.app-shell)[data-section="overview"] :global(.flow-footer) {
+    font-size: 9px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.energy-summary) {
+    gap: 7px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.energy-summary > div + div) {
+    padding-left: 8px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.energy-summary span) {
+    font-size: 9px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.energy-summary strong) {
+    font-size: 17px;
+    letter-spacing: -0.5px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.widget-chart .chart) {
+    height: 242px;
+  }
+  .overview:global(.app-shell)[data-section="overview"]
+    :global(.widget-alerts .compact-alerts) {
+    display: block;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .overview:global(.app-shell)[data-section="overview"] *,
+  .overview:global(.app-shell)[data-section="overview"] *::before {
+    animation: none !important;
+    transition: none !important;
+  }
+}
